@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <p>App Component</p>
+    <p><i class="iconfont icon-fenxiang"></i> App Component</p>
   </div>
 </template>
 
