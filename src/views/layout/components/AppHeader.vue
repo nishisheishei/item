@@ -9,10 +9,10 @@
             </el-col>
             <el-col :span="8" class="header-img">
                 <!-- <span class="demonstration">click 激活</span> -->
-                <img src="http://toutiao.meiduo.site/Fkj6tQi3xJwVXi1u2swCElotfdCi" alt="">
+                <img src="userInfo.photo" alt="">
                 <el-dropdown trigger="click">
                 <span class="el-dropdown-link">
-                    下拉菜单<i class="el-icon-arrow-down el-icon--right"></i>
+                    {{ userInfo.name }}<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item>个人信息</el-dropdown-item>
@@ -29,8 +29,11 @@ export default {
   name: 'AppHeader',
   data () {
     return {
-
+      userInfo: {}
     }
+  },
+  created () {
+    this.userInfo = JSON.parse(window.localStorage.getItem('user_Info'))
   }
 }
 </script>

@@ -25,10 +25,10 @@
             <span>内容管理</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="/publish">发布文章</el-menu-item>
-            <el-menu-item index="/article">内容列表</el-menu-item>
-            <el-menu-item index="/comment">评论列表</el-menu-item>
-            <el-menu-item index="/image">素材管理</el-menu-item>
+            <el-menu-item index="/publish"><i class="iconfont icon-wenzhang1"></i>发布文章</el-menu-item>
+            <el-menu-item index="/article"><i class="iconfont icon-liebiao2"></i>内容列表</el-menu-item>
+            <el-menu-item index="/comment"><i class="iconfont icon-liebiao"></i>评论列表</el-menu-item>
+            <el-menu-item index="/image"><i class="iconfont icon-xiangmuguanli"></i>素材管理</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="3">
@@ -37,10 +37,10 @@
             <span>粉丝管理</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="/fans">图文数据</el-menu-item>
-            <el-menu-item index="/fans/overview">粉丝概况</el-menu-item>
-            <el-menu-item index="/fans/portrayal">粉丝画像</el-menu-item>
-            <el-menu-item index="/fans/list">粉丝列表</el-menu-item>
+            <el-menu-item index="/fans"><i class="iconfont icon-shuju"></i>图文数据</el-menu-item>
+            <el-menu-item index="/fans/overview"><i class="iconfont icon-quanshixiangmugaikuang"></i>粉丝概况</el-menu-item>
+            <el-menu-item index="/fans/portrayal"><i class="iconfont icon-fensi"></i>粉丝画像</el-menu-item>
+            <el-menu-item index="/fans/list"><i class="iconfont icon-liebiao1"></i>粉丝列表</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-menu-item index="/account">
