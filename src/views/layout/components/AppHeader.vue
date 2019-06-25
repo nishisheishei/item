@@ -9,14 +9,17 @@
             </el-col>
             <el-col :span="8" class="header-img">
                 <!-- <span class="demonstration">click 激活</span> -->
-                <img src="userInfo.photo" alt="">
+                <img :src="userInfo.photo" alt="">
                 <el-dropdown trigger="click">
                 <span class="el-dropdown-link">
                     {{ userInfo.name }}<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item>个人信息</el-dropdown-item>
-                    <el-dropdown-item>退出</el-dropdown-item>
+                    <!--
+                        我可以使用 .native 事件修饰符将原始的 HTML 页面注册到组件的根元素上
+                     -->
+                    <el-dropdown-item @click.native="handleLogout">退出</el-dropdown-item>
                 </el-dropdown-menu>
                 </el-dropdown>
             </el-col>
@@ -34,8 +37,14 @@ export default {
   },
   created () {
     this.userInfo = JSON.parse(window.localStorage.getItem('user_Info'))
+  },
+  methods: {
+    handleLogout () {
+      console.log('handleLogout')
+    }
   }
 }
+// {"token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NjE0NDcwOTYsInVzZXJfaWQiOjExNDIzMjU0NDI4MDg2NDM1ODQsInJlZnJlc2giOmZhbHNlLCJ2ZXJpZmllZCI6dHJ1ZX0.kEs8iuSL29k3N_dFMzRCy-aKZgf_AC0VeZyA4UbA0mI","refresh_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE1NjI2NDk0OTYsInVzZXJfaWQiOjExNDIzMjU0NDI4MDg2NDM1ODQsInJlZnJlc2giOnRydWUsInZlcmlmaWVkIjp0cnVlfQ.3HE4728m8SEuAK2VJuB1ZXt3az_QwKHpaw9tdD1sVhA","id":1142325442808643600,"name":"17501116111","photo":"http://toutiao.meiduo.site/Fkj6tQi3xJwVXi1u2swCElotfdCi"}   user_Info
 </script>
 
 <style lang="less" scoped>
