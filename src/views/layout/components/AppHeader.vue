@@ -40,7 +40,25 @@ export default {
   },
   methods: {
     handleLogout () {
-      console.log('handleLogout')
+      this.$confirm('确定要退出吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 退出成功清除持久存储中的 user_Info 数据
+        window.localStorage.removeItem('user_Info')
+        // 跳转到登录页面
+        this.$router.push({ name: 'login' })
+        this.$message({
+          type: 'success',
+          message: '退出成功!'
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取退出'
+        })
+      })
     }
   }
 }
