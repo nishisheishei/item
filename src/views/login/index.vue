@@ -42,6 +42,9 @@
 import axios from 'axios'
 // 引入极验 JavaScript SDK 文件， 通过 window。initGeetest 使用
 import '@/vendor/gt'
+
+// 按需加载，加载模快中非 export default 成员
+import { saveUser } from '@/utils/auth'
 const initCodeTimeSeconds = 300
 
 export default {
@@ -93,7 +96,8 @@ export default {
       }).then(res => { // 登录成功  >=200 && < 400
         // console.log(res.data)
         const userInfo = res.data.data
-        window.localStorage.setItem('user_Info', JSON.stringify(userInfo))
+        // window.localStorage.setItem('user_Info', JSON.stringify(userInfo))
+        saveUser(userInfo)
         this.$message({
           message: '登录成功',
           type: 'success'

@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import { getUser, removeUser } from '@/utils/auth'
 export default {
   name: 'AppHeader',
   data () {
@@ -36,7 +37,9 @@ export default {
     }
   },
   created () {
-    this.userInfo = JSON.parse(window.localStorage.getItem('user_Info'))
+    //   获取存储数据
+    // this.userInfo = JSON.parse(window.localStorage.getItem('user_Info'))
+    this.userInfo = getUser()
   },
   methods: {
     handleLogout () {
@@ -46,7 +49,8 @@ export default {
         type: 'warning'
       }).then(() => {
         // 退出成功清除持久存储中的 user_Info 数据
-        window.localStorage.removeItem('user_Info')
+        // window.localStorage.removeItem('user_Info')
+        removeUser('user_Info')
         // 跳转到登录页面
         this.$router.push({ name: 'login' })
         this.$message({
