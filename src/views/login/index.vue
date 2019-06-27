@@ -30,7 +30,7 @@
         </el-form-item>
 
         <el-form-item class="login-btn">
-          <el-button class="btn-login" type="primary" @click="handleLogin">登录</el-button>
+          <el-button class="btn-login" type="primary" @click="handleLogin" :loading="loginLoading">登录</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -51,7 +51,7 @@ export default {
   name: 'AppLogin',
   data () {
     return {
-      form: {
+      form: { // 表单数据对象
         mobile: '',
         code: '',
         agree: ''
@@ -70,8 +70,9 @@ export default {
           { pattern: /true/, message: '请同意用户协议' }
         ]
       },
-      codeTimer: null,
-      codeTimeSeconds: initCodeTimeSeconds
+      codeTimer: null, // 倒计时定时器
+      codeTimeSeconds: initCodeTimeSeconds, // 倒计时时间
+      loginLoading: false // login 登录按钮禁用
     }
   },
   methods: {
@@ -89,6 +90,8 @@ export default {
     },
     // 点击登录按钮 发送的axios请求
     async submitLogin () {
+      // 发送请求的时候禁用
+      this.loginLoading = true
       try {
         const userInfo = await this.$http({
           method: 'POST',
@@ -109,6 +112,8 @@ export default {
         // 登录失败
         this.$message.error('登录失败，手机号或验证码错误')
       }
+      // 登录失败的时候可以使用
+      this.loginLoading = false
     },
 
     // 点击按钮发送验证码
