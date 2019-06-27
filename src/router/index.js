@@ -69,6 +69,7 @@ router.beforeEach((to, from, next) => {
   // 获取是否登录
   // const userInfo = window.localStorage.getItem('user_Info')
   const userInfo = getUser()
+  // console.log(userInfo)
   // 非登录页面
   if (to.path !== '/login') {
     // 没有登录，跳转到登录页面

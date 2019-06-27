@@ -1,5 +1,5 @@
 const localStorage = window.localStorage
-const USER_KEY = 'user_Info'
+const USER_KEY = 'user_info'
 
 // 保存本地存储
 export function getUser () {

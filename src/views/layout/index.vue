@@ -1,20 +1,4 @@
 <template>
-
-        <!-- <el-container>
-            <el-aside width="200px"> -->
-                <!-- 侧边栏 -->
-                <!-- <AppAside/>
-            </el-aside>
-            <el-container>
-                <el-header> -->
-                    <!-- 头部 -->
-                    <!-- <AppHeader/>
-                </el-header> -->
-                <!-- 内容 -->
-                <!-- <el-main></el-main>
-            </el-container>
-        </el-container> -->
-
     <el-container>
         <el-aside width="200px">
             <!-- 侧边栏 -->

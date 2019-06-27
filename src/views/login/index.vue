@@ -90,14 +90,12 @@ export default {
     // 点击登录按钮 发送的axios请求
     async submitLogin () {
       try {
-        const res = await this.$http({
+        const userInfo = await this.$http({
           method: 'POST',
           url: '/authorizations',
           data: this.form
         })
         // 登录成功  >=200 && < 400
-        // console.log(res.data)
-        const userInfo = res.data.data
         // window.localStorage.setItem('user_Info', JSON.stringify(userInfo))
         saveUser(userInfo)
         this.$message({
@@ -129,13 +127,12 @@ export default {
     // 验证通过，初始化显示人机交互验证码
     async showGeetest () {
       const { mobile } = this.form
-      const res = await this.$http({
+      const data = await this.$http({
         method: 'GET',
         url: `/captchas/${mobile}`
       })
 
       // console.log(res.data)
-      const { data } = res.data
       const captchaObj = await initGeetest({
         gt: data.gt,
         challenge: data.challenge,
