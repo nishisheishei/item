@@ -26,7 +26,8 @@
     <!-- 文章列表 -->
     <el-table
       :data="articles"
-      style="width: 100%">
+      style="width: 100%"
+      v-loading="articleLoading">
       <el-table-column
         label="封面"
         width="180">
@@ -76,7 +77,8 @@
         layout="prev, pager, next"
         :page-size="pageSize"
         :total="totalCount"
-        @current-change="handleCurrentChange">
+        @current-change="handleCurrentChange"
+        :disabled="articleLoading">
       </el-pagination>
       <!-- /数据分页 -->
     </div>
@@ -113,7 +115,8 @@ export default {
       ],
       pageSize: 10, // 每页数量
       totalCount: 0, // 总数量
-      page: 1 // 当前页码
+      page: 1, // 当前页码
+      articleLoading: false // 加载中
     }
   },
   created () {
@@ -121,6 +124,8 @@ export default {
   },
   methods: {
     async loadArticles () {
+      // 请求开始 加载loading
+      this.articleLoading = true
       // const token = getUser().token
       // 处理登录相关接口之后，其他接口都必须在请求头中通过 Authorization 字段提供用户 token
       // 当我们登录成功，服务端会生成一个 token 令牌，放到用户信息中
@@ -132,9 +137,12 @@ export default {
           per_page: this.pageSize // 每页大小
         }
       })
-      console.log(data)
+      // console.log(data)
       this.articles = data.results
       this.totalCount = data.total_count
+
+      // 请求结束 , 停止 loading
+      this.articleLoading = false
     },
     handleCurrentChange (page) {
       // console.log(page)
