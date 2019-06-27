@@ -15,7 +15,7 @@
           </el-col>
           <el-col :offset="1" :span="9">
             <!-- <el-button @click="handleSendCode">获取验证码</el-button> -->
-            <el-button @click="handleSendCode" :disabled="!!codeTimer">{{ codeTimer ? `剩余${codeTimeSeconds}秒` : '获取验证码' }}</el-button>
+            <el-button @click="handleSendCode" :disabled="!!codeTimer" :loading="codeLoading">{{ codeTimer ? `剩余${codeTimeSeconds}秒` : '获取验证码' }}</el-button>
           </el-col>
         </el-form-item>
 
@@ -72,7 +72,8 @@ export default {
       },
       codeTimer: null, // 倒计时定时器
       codeTimeSeconds: initCodeTimeSeconds, // 倒计时时间
-      loginLoading: false // login 登录按钮禁用
+      loginLoading: false, // login 登录按钮禁用
+      codeLoading: false // 获取验证码按钮禁用
     }
   },
   methods: {
@@ -131,41 +132,53 @@ export default {
     },
     // 验证通过，初始化显示人机交互验证码
     async showGeetest () {
-      const { mobile } = this.form
-      const data = await this.$http({
-        method: 'GET',
-        url: `/captchas/${mobile}`
-      })
-
-      // console.log(res.data)
-      const captchaObj = await initGeetest({
-        gt: data.gt,
-        challenge: data.challenge,
-        offline: !data.success,
-        new_captcha: data.new_captcha,
-        product: 'bind' // 隐藏，直接弹出式
-      })
-      // console.log(captchaObj)
-      captchaObj.onReady(() => { // 弹出验证码内容框
-        // 验证码ready之后才能调用verify方法显示验证码
-        captchaObj.verify()
-      }).onSuccess(async () => {
-        // your code
-        // console.log(captchaObj.getValidate())
-        const { geetest_challenge: challenge, geetest_seccode: seccode, geetest_validate: validate } = captchaObj.getValidate()
-        await this.$http({
+      try {
+        this.codeLoading = true
+        const { mobile } = this.form
+        const data = await this.$http({
           method: 'GET',
-          url: `/sms/codes/${mobile}`,
-          params: {
-            challenge,
-            validate,
-            seccode
+          url: `/captchas/${mobile}`
+        })
+
+        // console.log(res.data)
+        const captchaObj = await initGeetest({
+          gt: data.gt,
+          challenge: data.challenge,
+          offline: !data.success,
+          new_captcha: data.new_captcha,
+          product: 'bind' // 隐藏，直接弹出式
+        })
+        // console.log(captchaObj)
+        captchaObj.onReady(() => { // 弹出验证码内容框
+          this.codeLoading = false
+          // 验证码ready之后才能调用verify方法显示验证码
+          captchaObj.verify()
+        }).onSuccess(async () => {
+          try {
+            // your code
+            // console.log(captchaObj.getValidate())
+            const { geetest_challenge: challenge, geetest_seccode: seccode, geetest_validate: validate } = captchaObj.getValidate()
+            await this.$http({
+              method: 'GET',
+              url: `/sms/codes/${mobile}`,
+              params: {
+                challenge,
+                validate,
+                seccode
+              }
+            })
+            // console.log(res.data)
+            // 开启倒计时效果
+            this.codeCountDown()
+          } catch (err) {
+            this.$message.error('获取验证码失败')
+            this.codeLoading = false
           }
         })
-        // console.log(res.data)
-        // 开启倒计时效果
-        this.codeCountDown()
-      })
+      } catch (err) {
+        this.$message.error('获取验证码失败')
+        this.codeLoading = false
+      }
     },
     codeCountDown () {
       this.codeTimer = window.setInterval(() => {
