@@ -28,7 +28,7 @@
         </el-form-item>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button type="primary" @click="handleFilter" :loading="articleLoading">查询</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -36,7 +36,7 @@
     <!-- 文章列表 -->
     <el-card class="filter-card">
       <div slot="header" class="clearfix">
-        <span>一共有xxx条数据</span>
+        <span>一共有<strong>{{ totalCount }}</strong>条数据</span>
         <el-button style="float: right; padding: 3px 0" type="text">查ddd询</el-button>
       </div>
       <!--
@@ -97,9 +97,15 @@
         </el-table>
       </el-card>
       <!-- /文章列表 -->
-      <!-- 数据分页 -->
+      <!-- 数据分页
+          page-size 配置每页大小，默认是 10
+          total 用来配置总记录数
+          分页组件会根据每页大小和总记录数进行分页
+          current-page 当前高亮的页码，需要和数据保持同步
+      -->
       <el-pagination
         background
+        :current-page="page"
         layout="prev, pager, next"
         :page-size="pageSize"
         :total="totalCount"
@@ -176,18 +182,33 @@ export default {
         this.$message.error('获取频道数据失败')
       }
     },
+
+    handleFilter () {
+      // console.log('submit!')
+      this.page = 1 // 查询从第一页查询
+      this.loadArticles()
+    },
+
     async loadArticles () {
       // 请求开始 加载loading
       this.articleLoading = true
       // const token = getUser().token
       // 处理登录相关接口之后，其他接口都必须在请求头中通过 Authorization 字段提供用户 token
       // 当我们登录成功，服务端会生成一个 token 令牌，放到用户信息中
+      const filterDate = {}
+      for (let key in this.filterParams) {
+        const item = this.filterParams[key]
+        if (item !== null && item !== undefined && item !== '') {
+          filterDate[key] = item
+        }
+      }
       const data = await this.$http({
         method: 'GET',
         url: '/articles',
         params: {
           page: this.page, // 页数
-          per_page: this.pageSize // 每页大小
+          per_page: this.pageSize, // 每页大小
+          ...filterDate
         }
       })
       // console.log(data)
@@ -197,16 +218,15 @@ export default {
       // 请求结束 , 停止 loading
       this.articleLoading = false
     },
+
     handleCurrentChange (page) {
       // console.log(page)
       // 将数据中的页码修改为最新改变的数据页码
       this.page = page
       // 页码改变，重新加载当前文章列表
       this.loadArticles()
-    },
-    onSubmit () {
-      console.log('submit!')
     }
+
   }
 }
 </script>
