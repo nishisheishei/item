@@ -17,7 +17,9 @@
         </el-form-item>
         <el-form-item label="活动时间">
           <el-date-picker
-            v-model="filterParams.begin_pubdate"
+            value-format="yyyy-MM-dd"
+            v-model="filterParams.range_date"
+            @change="handleDtaeChange"
             type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
@@ -147,7 +149,8 @@ export default {
       totalCount: 0, // 总数量
       page: 1, // 当前页码
       articleLoading: false, // 加载中
-      channels: [] // 频道数据
+      channels: [], // 频道数据
+      range_date: '' // 时间范围绑定值，这个字段的意义是为了绑定 date 组件触发change 事件
     }
   },
   created () {
@@ -155,13 +158,18 @@ export default {
     this.loadChannels()
   },
   methods: {
+    handleDtaeChange (value) {
+      // console.log(value)
+      this.filterParams.begin_pubdate = value[0]
+      this.filterParams.end_pubdate = value[1]
+    },
     async loadChannels () {
       try {
         const data = await this.$http({
           method: 'GET',
           url: '/channels'
         })
-        console.log(data)
+        // console.log(data)
         this.channels = data.channels
       } catch (err) {
         console.log(err)
