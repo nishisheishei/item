@@ -3,13 +3,42 @@
     <div>
       <!-- 数据筛选 -->
       <el-card class="filter-card">
+      <el-form ref="filterParams" :model="filterParams" label-width="80px">
+        <el-form-item label="文章状态">
+          <el-radio-group v-model="filterParams.status">
+            <el-radio label="">全部</el-radio>
+            <el-radio v-for="(item, index) in statTypes" :key="item.label" :label="index">{{ item.label }}</el-radio>
+        </el-radio-group>
+        <el-form-item label="频道列表" class="article-label">
+          <el-select v-model="filterParams.channel_id" placeholder="请选择" clearable>
+            <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <!-- <el-option label="区域二" value="beijing"></el-option> -->
+          </el-select>
+        </el-form-item>
+        <el-form-item label="活动时间">
+          <el-date-picker
+            v-model="filterParams.begin_pubdate"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+        </el-form-item>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+    <!-- /数据筛选 -->
+    <!-- 文章列表 -->
+    <el-card class="filter-card">
       <div slot="header" class="clearfix">
         <span>一共有xxx条数据</span>
-        <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
+        <el-button style="float: right; padding: 3px 0" type="text">查ddd询</el-button>
       </div>
-
       <!--
-        talbel 表格不需要我们自己去手动 v-for 遍历
+      talbel 表格不需要我们自己去手动 v-for 遍历
         只需要将数组数据交给 table 表格的 data 属性就可以了
         然后配置 el-table-column 表格列组件即可
           label 列表标题
@@ -18,58 +47,53 @@
       表格默认吧数据当做文本去输出
       如果需要其他数据格式，侧可以自定义表格列
        -->
-      <div v-for="o in 4" :key="o" class="text item">
-        {{'列表内容 ' + o }}
-      </div>
-    </el-card>
-    <!-- /数据筛选 -->
-    <!-- 文章列表 -->
-    <el-table
-      :data="articles"
-      style="width: 100%"
-      v-loading="articleLoading">
-      <el-table-column
-        label="封面"
-        width="180">
-        <!--
-          template 中的内容就是自定义表格列内容
-          如果需要早 template中访问遍历项数据，则需要给 template 配置 slot-scope="scope"
-            slot-scope 属性名是固定的
-            scope 值是自己随便起的名字
-         -->
-        <template slot-scope="scope">
-          <img
-            width="20"
-            v-for="item in scope.row.cover.images"
-            :key="item"
-            :src="item">
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="title"
-        label="标题"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        label="状态"
-        width="180">
-        <template slot-scope="scope">
-          <el-tag :type="statTypes[scope.row.status].type">{{ statTypes[scope.row.status].label }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="pubdate"
-        label="发布时间"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        label="操作">
-        <template>
-          <el-button size="mini" type="primary" plain>修改</el-button>
-          <el-button size="mini" type="warning" plain>删除</el-button>
-        </template>
-      </el-table-column>
-      </el-table>
+      <el-table
+        :data="articles"
+        style="width: 100%"
+        v-loading="articleLoading">
+        <el-table-column
+          label="封面"
+          width="180">
+          <!--
+            template 中的内容就是自定义表格列内容
+            如果需要早 template中访问遍历项数据，则需要给 template 配置 slot-scope="scope"
+              slot-scope 属性名是固定的
+              scope 值是自己随便起的名字
+          -->
+          <template slot-scope="scope">
+            <img
+              width="20"
+              v-for="item in scope.row.cover.images"
+              :key="item"
+              :src="item">
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="title"
+          label="标题"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          label="状态"
+          width="180">
+          <template slot-scope="scope">
+            <el-tag :type="statTypes[scope.row.status].type">{{ statTypes[scope.row.status].label }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="pubdate"
+          label="发布时间"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          label="操作">
+          <template>
+            <el-button size="mini" type="primary" plain>修改</el-button>
+            <el-button size="mini" type="warning" plain>删除</el-button>
+          </template>
+        </el-table-column>
+        </el-table>
+      </el-card>
       <!-- /文章列表 -->
       <!-- 数据分页 -->
       <el-pagination
@@ -90,6 +114,12 @@ export default {
   name: 'AppArticle',
   data () {
     return {
+      filterParams: {
+        status: '', // 状态
+        channel_id: '', // 频道
+        begin_pubdate: '', // 起始时间
+        end_pubdate: '' // 截止时间
+      },
       articles: [],
       statTypes: [
         {
@@ -110,19 +140,34 @@ export default {
         },
         {
           type: 'danger',
-          label: '删除'
+          label: '已删除'
         }
       ],
       pageSize: 10, // 每页数量
       totalCount: 0, // 总数量
       page: 1, // 当前页码
-      articleLoading: false // 加载中
+      articleLoading: false, // 加载中
+      channels: [] // 频道数据
     }
   },
   created () {
     this.loadArticles()
+    this.loadChannels()
   },
   methods: {
+    async loadChannels () {
+      try {
+        const data = await this.$http({
+          method: 'GET',
+          url: '/channels'
+        })
+        console.log(data)
+        this.channels = data.channels
+      } catch (err) {
+        console.log(err)
+        this.$message.error('获取频道数据失败')
+      }
+    },
     async loadArticles () {
       // 请求开始 加载loading
       this.articleLoading = true
@@ -150,6 +195,9 @@ export default {
       this.page = page
       // 页码改变，重新加载当前文章列表
       this.loadArticles()
+    },
+    onSubmit () {
+      console.log('submit!')
     }
   }
 }
@@ -158,5 +206,8 @@ export default {
 <style lang="less" scoped>
 .filter-card {
   margin-bottom: 30px;
+}
+.article-label {
+  margin-bottom: 10px;
 }
 </style>
