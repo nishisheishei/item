@@ -45,7 +45,7 @@ export default {
             article_id: item.id.toString() // 注意：数据 id 转为字符串
           },
           data: {
-            allow_comment: item.allow_comment
+            allow_comment: item.comment_status
           }
         })
         this.$message({
