@@ -11,6 +11,7 @@
         </el-radio-group>
         <el-form-item label="频道列表" class="article-label">
           <el-select v-model="filterParams.channel_id" placeholder="请选择" clearable>
+            <!-- <article-channel v-model="filterParams.channel_id"></article-channel> -->
             <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
             <!-- <el-option label="区域二" value="beijing"></el-option> -->
           </el-select>
@@ -116,9 +117,13 @@
 </template>
 
 <script>
+// import ArticleChannel from '@/components/article-channel'
 // import { getUser } from '@/utils/auth'
 export default {
-  name: 'AppArticle',
+  name: 'ArticleList',
+  // components: {
+  //   ArticleChannel
+  // },
   data () {
     return {
       filterParams: {
@@ -159,7 +164,10 @@ export default {
     }
   },
   created () {
+    // 加载文章列表
     this.loadArticles()
+
+    // 加载频道列表
     this.loadChannels()
   },
   methods: {
