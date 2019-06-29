@@ -6,6 +6,7 @@ import axios from 'axios'
 import { getUser, removeUser } from '@/utils/auth'
 // 进度条的样式
 import 'nprogress/nprogress.css'
+import JSONbig from 'json-bigint'
 
 // 先找文件，没有就找目录
 // 如果找到目录，优先加载目录中的 index
@@ -16,6 +17,23 @@ import './styles/index.less'
 
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0/'
 // axios.defaults.baseURL = 'http://toutiao.course.itcast.cn/mp/v1_0/'
+
+//
+axios.defaults.transformResponse = [function (data) {
+  // return data
+  // 如何解决后端返回数据中的数字超出安全整数范围问题？
+  // 这里使用 JSONbig 转换原始数据
+  // 类似于 JSON.parse
+  // 但是它会处理其中超出安全整数范围的整数问题
+  // 严谨一点，如果 data 不是 json 格式字符串就会报错
+  try {
+    // 如果 json 格式字符串，就转换并返回给后续使用
+    return JSONbig.parse(data)
+  } catch (err) {
+    // 报错就意味着 data 不是 json 格式字符串，这里就直接原样返回给后续使用
+    return data
+  }
+} ]
 
 // Axios 请求拦截器：axios 发出的请求会先经过这里
 axios.interceptors.request.use(config => {

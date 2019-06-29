@@ -37,7 +37,6 @@
     <el-card class="filter-card">
       <div slot="header" class="clearfix">
         <span>一共有<strong>{{ totalCount }}</strong>条数据</span>
-        <el-button style="float: right; padding: 3px 0" type="text">查ddd询</el-button>
       </div>
       <!--
       talbel 表格不需要我们自己去手动 v-for 遍历
@@ -89,9 +88,9 @@
         </el-table-column>
         <el-table-column
           label="操作">
-          <template>
+          <template slot-scope="scope">
             <el-button size="mini" type="primary" plain>修改</el-button>
-            <el-button size="mini" type="warning" plain>删除</el-button>
+            <el-button size="mini" type="warning" plain @click="handleDelete(scope.row)">删除</el-button>
           </template>
         </el-table-column>
         </el-table>
@@ -164,6 +163,45 @@ export default {
     this.loadChannels()
   },
   methods: {
+    // 点击删除
+    async handleDelete (item) {
+      try {
+        // 删除确认提示
+        await this.$confirm('确定要删除吗？', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        })
+        // .catch (() => {
+        //   this.$message({
+        //     type: 'info',
+        //     message: '已取消删除'
+        //   })
+        // })
+        // 确认：执行删除操作
+        await this.$http({
+          method: 'DELETE',
+          url: `/articles/${item.id}`
+        })
+
+        this.$message({
+          type: 'success',
+          message: '删除成功'
+        })
+
+        // 删除成功重新加载数据列表
+        this.loadArticles()
+      } catch (err) {
+        // console.log(err)
+        if (err === 'cancel') {
+          return this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        }
+        this.$message.error('删除失败')
+      }
+    },
     handleDtaeChange (value) {
       // console.log(value)
       this.filterParams.begin_pubdate = value[0]
@@ -190,33 +228,38 @@ export default {
     },
 
     async loadArticles () {
-      // 请求开始 加载loading
-      this.articleLoading = true
-      // const token = getUser().token
-      // 处理登录相关接口之后，其他接口都必须在请求头中通过 Authorization 字段提供用户 token
-      // 当我们登录成功，服务端会生成一个 token 令牌，放到用户信息中
-      const filterDate = {}
-      for (let key in this.filterParams) {
-        const item = this.filterParams[key]
-        if (item !== null && item !== undefined && item !== '') {
-          filterDate[key] = item
+      try {
+        // 请求开始 加载loading
+        this.articleLoading = true
+        // const token = getUser().token
+        // 处理登录相关接口之后，其他接口都必须在请求头中通过 Authorization 字段提供用户 token
+        // 当我们登录成功，服务端会生成一个 token 令牌，放到用户信息中
+        const filterDate = {}
+        for (let key in this.filterParams) {
+          const item = this.filterParams[key]
+          if (item !== null && item !== undefined && item !== '') {
+            filterDate[key] = item
+          }
         }
-      }
-      const data = await this.$http({
-        method: 'GET',
-        url: '/articles',
-        params: {
-          page: this.page, // 页数
-          per_page: this.pageSize, // 每页大小
-          ...filterDate
-        }
-      })
-      // console.log(data)
-      this.articles = data.results
-      this.totalCount = data.total_count
+        const data = await this.$http({
+          method: 'GET',
+          url: '/articles',
+          params: {
+            page: this.page, // 页数
+            per_page: this.pageSize, // 每页大小
+            ...filterDate
+          }
+        })
+        // console.log(data)
+        this.articles = data.results
+        this.totalCount = data.total_count
 
-      // 请求结束 , 停止 loading
-      this.articleLoading = false
+        // 请求结束 , 停止 loading
+        this.articleLoading = false
+      } catch (err) {
+        console.log(err)
+        this.$message.error('加载文章列表失败')
+      }
     },
 
     handleCurrentChange (page) {
