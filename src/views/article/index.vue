@@ -10,9 +10,14 @@
             <el-radio v-for="(item, index) in statTypes" :key="item.label" :label="index">{{ item.label }}</el-radio>
         </el-radio-group>
         <el-form-item label="频道列表" class="article-label">
-          <el-select v-model="filterParams.channel_id" placeholder="请选择" clearable>
+          <el-select
+            v-model="filterParams.channel_id" placeholder="请选择" clearable>
             <!-- <article-channel v-model="filterParams.channel_id"></article-channel> -->
-            <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
+            <el-option
+              v-for="item in channels"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"></el-option>
             <!-- <el-option label="区域二" value="beijing"></el-option> -->
           </el-select>
         </el-form-item>
@@ -79,7 +84,9 @@
           label="状态"
           width="180">
           <template slot-scope="scope">
-            <el-tag :type="statTypes[scope.row.status].type">{{ statTypes[scope.row.status].label }}</el-tag>
+            <el-tag
+              :type="statTypes[scope.row.status].type"
+            >{{ statTypes[scope.row.status].label }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column
@@ -90,8 +97,16 @@
         <el-table-column
           label="操作">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" plain>修改</el-button>
-            <el-button size="mini" type="warning" plain @click="handleDelete(scope.row)">删除</el-button>
+            <el-button
+              size="mini"
+              type="primary"
+              plain @click="$router.push(`/publish/${scope.row.id}`)"
+            >修改</el-button>
+            <el-button
+              size="mini"
+              type="warning"
+              plain @click="handleDelete(scope.row)"
+            >删除</el-button>
           </template>
         </el-table-column>
         </el-table>
