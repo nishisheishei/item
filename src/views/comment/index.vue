@@ -72,7 +72,7 @@ export default {
             allow_comment: item.comment_status
           }
         })
-        JSON.parse('afdafa')
+        // JSON.parse('afdafa')
         this.$message({
           type: 'success',
           message: `${item.comment_status ? '启用' : '禁用'}评论状态成功`

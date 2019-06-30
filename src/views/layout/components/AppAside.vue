@@ -78,4 +78,11 @@ export default {
   align-items: center;
 }
 
+.el-menu {
+  height: 100%;
+}
+.iconfont {
+  margin-right: 10px;
+}
+
 </style>
