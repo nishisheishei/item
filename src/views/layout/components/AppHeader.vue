@@ -9,10 +9,10 @@
             </el-col>
             <el-col :span="8" class="header-img">
                 <!-- <span class="demonstration">click 激活</span> -->
-                <img :src="userInfo.photo" alt="">
+                <img :src="$store.state.user.photo" alt="">
                 <el-dropdown trigger="click">
                 <span class="el-dropdown-link">
-                    {{ userInfo.name }}<i class="el-icon-arrow-down el-icon--right"></i>
+                    {{ $store.state.user.name }}<i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
                     <el-dropdown-item>个人信息</el-dropdown-item>
@@ -28,18 +28,18 @@
 </template>
 
 <script>
-import { getUser, removeUser } from '@/utils/auth'
+import { removeUser } from '@/utils/auth'
 export default {
   name: 'AppHeader',
   data () {
     return {
-      userInfo: {}
+      // userInfo: {}
     }
   },
   created () {
     //   获取存储数据
     // this.userInfo = JSON.parse(window.localStorage.getItem('user_Info'))
-    this.userInfo = getUser()
+    // this.userInfo = getUser()
   },
   methods: {
     handleLogout () {

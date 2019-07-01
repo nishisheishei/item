@@ -96,7 +96,7 @@ export default {
       this.disabled = true
       try {
         const { name, intro, email } = this.user
-        await this.$http({
+        const data = await this.$http({
           method: 'PATCH',
           url: '/user/profile',
           data: {
@@ -110,6 +110,10 @@ export default {
           type: 'success',
           message: '保存修改成功'
         })
+
+        // this.$store.commit('changeUser', data)
+        // 提交 mutation，也就是调用 mutation 函数
+        this.$store.commit('changeUser', data)
       } catch (err) {
         this.$message.error('保存修改失败')
       }
@@ -131,8 +135,8 @@ export default {
           data: formData
         })
 
-        this.loadUser()
-
+        // this.loadUser()
+        // this.$store.commit('changeUser', this.user)
         this.$message({
           type: 'success',
           message: '上传头像成功'

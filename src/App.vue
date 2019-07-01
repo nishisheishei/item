@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <!-- <h1>{{ $store.state.user.name }}</h1> -->
     <router-view></router-view>
   </div>
 </template>
