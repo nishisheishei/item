@@ -6,8 +6,8 @@
       </div>
        <div class="action">
         <el-radio-group v-model="active">
-          <el-radio-button label="全部"></el-radio-button>
-          <el-radio-button label="收藏"></el-radio-button>
+          <el-radio-button @click.native="loadImages(false)" label="全部"></el-radio-button>
+          <el-radio-button @click.native="loadImages(true)" label="收藏"></el-radio-button>
         </el-radio-group>
         <el-button type="primary">上传图片</el-button>
       </div>
