@@ -9,7 +9,16 @@
           <el-radio-button @click.native="loadImages(false)" label="全部"></el-radio-button>
           <el-radio-button @click.native="loadImages(true)" label="收藏"></el-radio-button>
         </el-radio-group>
-        <el-button type="primary">上传图片</el-button>
+        <el-upload
+          action="http://ttapi.research.itcast.cn/mp/v1_0/user/images"
+          :headers="{ Authorization: `Bearer ${$store.state.user.token}` }"
+          name="image"
+          :on-success="handleUploadSuccess"
+          :show-file-list="false">
+          <!-- () => { this.loadImages(false) } -->
+          <el-button size="small" type="primary">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
       </div>
 
       <!-- 图片列表 -->
@@ -55,6 +64,7 @@ export default {
 
   methods: {
     async loadImages (collect = false) {
+      // this.disabled = true
       try {
         const data = await this.$http({
           method: 'GET',
@@ -71,6 +81,8 @@ export default {
         console.log(err)
         this.$message.error('加载图片失败')
       }
+
+      // this.disabled = false
     },
     async handleCollect (item) {
       const collect = !item.is_collected
@@ -109,6 +121,10 @@ export default {
       } catch (err) {
         this.$message.error('删除失败')
       }
+    },
+    handleUploadSuccess () {
+      // 上传成功，重新加载所有图片列表
+      this.loadImages(false)
     }
   }
 
