@@ -16,7 +16,7 @@
       <el-row :gutter="20">
         <el-col :span="4" v-for="item in images" :key="item.id" style="margin-bottom: 20px">
           <el-card :body-style="{ padding: '0px' }">
-            <img :src="item.url" class="image" style="max-width: 100%">
+            <img :src="item.url" class="image" style="max-width: 100%; width:200px;  height: 150px">
             <div style="padding: 14px;">
               <div class="bottom clearfix">
                 <time class="time"></time>
