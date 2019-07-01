@@ -111,9 +111,10 @@ export default {
           message: '保存修改成功'
         })
 
-        // this.$store.commit('changeUser', data)
         // 提交 mutation，也就是调用 mutation 函数
         this.$store.commit('changeUser', data)
+
+        // this.loadUser()
       } catch (err) {
         this.$message.error('保存修改失败')
       }
@@ -121,6 +122,7 @@ export default {
     },
     async handleUpload (upliadConfig) {
       this.loadingLoad = true
+
       // console.log(upliadConfig)
       try {
         // Axios 上传文件
@@ -129,14 +131,14 @@ export default {
         // 2. 发送请求，将 FormData 对象作为 axios 的data 请求体
         const formData = new FormData()
         formData.append('photo', upliadConfig.file)
-        await this.$http({
+        const data = await this.$http({
           method: 'PATCH',
           url: '/user/photo',
           data: formData
         })
-
-        // this.loadUser()
-        // this.$store.commit('changeUser', this.user)
+        this.user.photo = data.photo
+        this.$store.commit('changeUser', this.user)
+        this.loadUser()
         this.$message({
           type: 'success',
           message: '上传头像成功'

@@ -28,7 +28,7 @@
             <el-menu-item index="/publish"><i class="iconfont icon-wenzhang1"></i>发布文章</el-menu-item>
             <el-menu-item index="/article"><i class="iconfont icon-liebiao2"></i>内容列表</el-menu-item>
             <el-menu-item index="/comment"><i class="iconfont icon-liebiao"></i>评论列表</el-menu-item>
-            <el-menu-item index="/image"><i class="iconfont icon-xiangmuguanli"></i>素材管理</el-menu-item>
+            <el-menu-item index="/media"><i class="iconfont icon-xiangmuguanli"></i>素材管理</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
         <el-submenu index="3">
